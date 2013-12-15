@@ -6635,7 +6635,7 @@ d3.box = function() {
       quartiles = boxQuartiles,
       tickFormat = null;
 
-  // For each small multipleâ€¦
+  // For each small multiple…
   function box(g) {
     g.each(function(d, i) {
       d = d.map(value).sort(d3.ascending);

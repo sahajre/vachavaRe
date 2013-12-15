@@ -1,0 +1,13 @@
+"time","state","charge","count"
+1387113000,discharging,7,1
+1387113600,discharging,5,1
+1387114200,discharging,3,1
+1387114800,charging,6,1
+1387115400,charging,17,1
+1387116000,charging,28,1
+1387116600,charging,38,1
+1387117200,charging,47,1
+1387117800,discharging,47,1
+1387118400,discharging,44,1
+1387119000,discharging,42,1
+1387119600,discharging,39,1

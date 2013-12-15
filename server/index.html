@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>vachavaRe battery!</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+</head>
+
+<body>
+<script type="text/javascript" src="js/d3.js"></script>
+<script type="text/javascript" src="js/crossfilter.js"></script>
+<script type="text/javascript" src="js/dc.js"></script>
+
+
+<div class="container">
+    <h1>vachavaRe battery!</h1>
+
+    <div class="row">
+        <div id="data-count" class="span12">
+            Showing <span class="filter-count"/></span> of <span class="total-count"></span> data points
+            | <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="time-chart" class="dc-chart span6">
+            <strong>Duration</strong>
+            <small class="text-muted">
+            <time id="date-start" datetime="2012-08-26 20:09-0700">8:09pm on August 26th, 2012</time> &ndash;
+            <time id="date-end" datetime="2012-08-26 20:09-0700">8:09pm on August 26th, 2012</time>
+            </small>
+            <a class="reset" href="javascript:time_chart.filterAll(); dc.redrawAll();" style="display: none;">
+                reset
+            </a>
+
+            <div class="clearfix"></div>
+        </div>
+
+        <div id="temp-chart" class="dc-chart span6">
+            <strong>Battery usage data</strong>
+            <a class="reset" href="javascript:temp_chart.filterAll(); dc.redrawAll();" style="display: none;">
+                reset
+            </a>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="row">
+          <br />
+          <br />
+          <p align="center" class="text-center"><small>Developed and brought to you by Rahul Madhav Upakare.</small></p>
+    </div>
+
+</div> <!-- end container -->
+
+<script type="text/javascript">
+d3.csv("batteryStrength.csv", function (data) {
+
+    data.forEach(function (d) {
+        d.time = new Date(+d.time*1000);
+        console.log(d.time);
+        d.state = "Battery Status";
+        d.charge = +d.charge;
+        d.count = +d.count;
+    });
+
+// charts
+var time_chart = dc.seriesChart("#time-chart"),
+    temp_chart = dc.barChart("#temp-chart"),
+    width = temp_chart.root()[0][0].parentElement.clientWidth;
+
+var coerce_row = function(d){
+    return {
+        time: new Date(+d[0] * 1000.0),
+        state: d[1],
+        charge: +d[2],
+        count: +d[3],
+    };
+};
+
+var addC = function(p, d){ return p + d.count;},
+    remC = function(p, d){ return p - d.count;},
+    addT = function(p, d){ return p + d.charge;},
+    remT = function(p, d){ return p - d.charge;},
+    ini = function(){ return 0;},
+    ndx = crossfilter(data),
+    all = ndx.groupAll().reduce(addC, remC, ini),
+    states = ndx.dimension(function(d){ return d.state;}).group(),
+    time_field = ndx.dimension(function(d) { return [d.time, d.state];}),
+    time_fields = time_field.group().reduce(addT, remT, ini),
+    charge = ndx.dimension(function(d){return d.charge;}),
+    charges = charge.group().reduce(addC, remC, ini);
+    extent = d3.extent(data, function(d){return d.time;}),
+    date_format = d3.time.format("%b %d %I:%M %p"),
+
+d3.select("#date-start")
+    .attr("datetime", extent[0])
+    .text(date_format(extent[0]));
+d3.select("#date-end")
+    .attr("datetime", extent[1])
+    .text(date_format(extent[1]));
+
+dc.dataCount("#data-count")
+// Since the number of records (returned by .size()) isn't the same as the number
+// of data points we're aggregating, supply a size-like object that returns the
+// total number of data points represented.
+    .dimension({size: function(){return data.reduce(addC, 0);}})
+    .group(all);
+
+time_chart
+    .width(.5 * width)
+    .height(400)
+    .dimension(time_field)
+    .group(time_fields)
+    .seriesAccessor(function(d) { return d.key[1]; })
+    .keyAccessor(function(d) {return d.key[0];})
+    .elasticY(true)
+    .elasticX(true)
+    .xAxisLabel("Time")
+    .yAxisLabel("Percentage Battery Charged")
+    .x(d3.time.scale().domain(extent))
+    .renderHorizontalGridLines(true)
+    .renderVerticalGridLines(true)
+    .legend(dc.legend().x(0.35*width).y(260).itemHeight(13).gap(5))
+    .brushOn(false);
+
+temp_chart
+    .width(.5 * width)
+    .dimension(charge)
+    .x(d3.scale.linear().domain([0, 100]))
+    .xAxisLabel("Percentage Battery Charged")
+    .elasticX(true)
+    .height(400)
+    .group(charges)
+    .elasticY(true)
+    .yAxisLabel("Count")
+    .renderHorizontalGridLines(true);
+
+dc.renderAll();
+});
+</script>
+</body>
+</html>
+
