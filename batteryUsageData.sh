@@ -14,7 +14,11 @@ else
     echo '"time","state","charge","count"' > dataFile
 fi
 
-if [ $batteryPercentage -eq 100 ]
+# to make sure the server is available all the time
+# when it is already running the command will fail, but that is okay as I am lazy!
+cd ${presentDir}/server; python -m SimpleHTTPServer 4242 >& /dev/null &
+
+if [ $batteryPercentage -eq 100 && "$batteryStatus" == "charging" ]
 then
 
   say "Fully charged."   
@@ -27,12 +31,8 @@ then
 
   if [ "$answer" == "button returned:Show Usage Data" ] 
   then
-    cd ${presentDir}/server; python -m SimpleHTTPServer 4242 >& /dev/null &
     open "http://localhost:4242/index.html"
   fi
 
 fi
 
-# to make sure the server is available even when battery is not full
-# when it is already running it will fail, but that is okay as I am lazy!
-cd ${presentDir}/server; python -m SimpleHTTPServer 4242 >& /dev/null &
