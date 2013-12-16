@@ -4,7 +4,8 @@ timeStamp=`date "+%s"`
 batteryStatus=`pmset -g batt | grep "InternalBattery" | cut -d";" -f2 | cut -d' ' -f2`
 batteryPercentage=`pmset -g batt | grep "InternalBattery" | cut -d";" -f1 | cut -s -f2 | cut -d% -f1`
 batteryEstimate=`pmset -g batt | grep "InternalBattery" | cut -d";" -f3`
-dataFile="./server/batteryStrength.csv"
+presentDir=`dirname $0`
+dataFile="${presentDir}/server/batteryStrength.csv"
 
 if [ -f $dataFile ]
 then
@@ -26,8 +27,12 @@ then
 
   if [ "$answer" == "button returned:Show Usage Data" ] 
   then
-    cd server; python -m SimpleHTTPServer 4242 >& /dev/null &
+    cd ${presentDir}/server; python -m SimpleHTTPServer 4242 >& /dev/null &
     open "http://localhost:4242/index.html"
   fi
 
 fi
+
+# to make sure the server is available even when battery is not full
+# when it is already running it will fail, but that is okay as I am lazy!
+cd ${presentDir}/server; python -m SimpleHTTPServer 4242 >& /dev/null &
