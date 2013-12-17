@@ -4,8 +4,11 @@ timeStamp=`date "+%s"`
 batteryStatus=`pmset -g batt | grep "InternalBattery" | cut -d";" -f2 | cut -d' ' -f2`
 batteryPercentage=`pmset -g batt | grep "InternalBattery" | cut -d";" -f1 | cut -s -f2 | cut -d% -f1`
 batteryEstimate=`pmset -g batt | grep "InternalBattery" | cut -d";" -f3`
+powerSource=`pmset -g batt | grep "Currently drawing" | cut -d"'" -f2`
 presentDir=`dirname $0`
 dataFile="${presentDir}/server/batteryStrength.csv"
+
+powerSourceBattery="Battery Power"
 
 if [ -f $dataFile ]
 then
@@ -18,7 +21,7 @@ fi
 # when it is already running the command will fail, but that is okay as I am lazy!
 cd ${presentDir}/server; python -m SimpleHTTPServer 4242 >& /dev/null &
 
-if [ $batteryPercentage -eq 100 && "$batteryStatus" == "charging" ]
+if [ $batteryPercentage -eq 100 -a "${powerSource}" != "${powerSourceBattery}" ]
 then
 
   say "Fully charged."   
