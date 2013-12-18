@@ -1,7 +1,15 @@
 vachavaRe battery
 =================
 
-There is no simple and single answer to increase the Apple notebook battery performance and its life.
+How to install?
+
+```
+$ git clone https://github.com/sahajRe/vachavaRe.git
+$ cd vachavaRe
+$ chmod +x addCronJob.sh
+$ ./addCronJob.sh
+```
+There is no simple and single answer to increase the Apple notebook battery performance and life.
 
 You can follow any guidelines, this tool will help you to analyze if you are following those guidelines using nicely
 rendered charts. That's it!
