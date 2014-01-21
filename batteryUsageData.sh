@@ -28,7 +28,7 @@ then
 
   answer=$(osascript -e 'try
     tell application "SystemUIServer"
-    display dialog "The battery is fully charged!\nPlease turn off the external power supply." buttons {"Show Usage Data", "Okay"} default button 2 with title "vachavaRe Battery"
+    display dialog "The battery is fully charged!\nPlease turn off the external power supply." buttons {"Show Usage Data", "Okay"} default button 2 with title "vachavaRe Battery" giving up after 60
     end
   end' | tr '\r' '\n')
 
