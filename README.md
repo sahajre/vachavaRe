@@ -1,7 +1,15 @@
 vachavaRe battery
 =================
 
-There is no simple and single answer to increase the Apple notebook battery performance and its life.
+How to install?
+
+```
+$ git clone https://github.com/sahajRe/vachavaRe.git
+$ cd vachavaRe
+$ chmod +x addCronJob.sh
+$ ./addCronJob.sh
+```
+There is no simple and single answer to increase Apple notebook battery performance and life.
 
 You can follow any guidelines, this tool will help you to analyze if you are following those guidelines using nicely
 rendered charts. That's it!
@@ -29,7 +37,7 @@ such as the trunk of a car, especially a fully-charged battery. [1]
 
 DON’T run your MacBook or MacBook Pro on AC power with the battery removed. [1]
 
-Sources of above information: 
+References: 
 [1] https://discussions.apple.com/thread/1764220?threadID=1764220
 [2] http://support.apple.com/kb/ht1490
 
