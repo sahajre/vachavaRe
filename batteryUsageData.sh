@@ -14,7 +14,7 @@ if [ -f $dataFile ]
 then
   echo "$timeStamp,$batteryStatus,$batteryPercentage,1" >> $dataFile
 else
-    echo '"time","state","charge","count"' > dataFile
+    echo '"time","state","charge","count"' > $dataFile
 fi
 
 # to make sure the server is available all the time
